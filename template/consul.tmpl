@@ -8,8 +8,18 @@ defaults
     timeout client {{or (key "service/haproxy/timeouts/client") "50000ms"}}
     timeout server {{or (key "service/haproxy/timeouts/server") "50000ms"}}
 
-listen http-in
-    # Generated automatically by consul-template
-    bind *:80 {{range services}}{{range service .Name }}
-    server {{.Name}}.service.consul 127.0.0.1:{{.Port}} {{end}}{{end}}
+frontend incoming
+    bind *:80
 
+    #Generated automatically by consul-template
+    {{ range services }}
+    acl host_{{ .Name }} hdr(host) -i {{ .Name }}.service.consul
+    use_backend {{ .Name }}_backend if host_{{ .Name }}
+    {{ end }}
+
+#Generated automatically by consul-template
+{{ range services }}
+backend {{ .Name }}_backend
+{{ range service .Name }}
+   server {{ .Name }} 127.0.0.1:{{ .Port }}{{ end }}
+{{ end }}
