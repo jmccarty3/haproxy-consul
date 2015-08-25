@@ -1,15 +1,18 @@
 global
     maxconn {{or (key "service/haproxy/maxconn") 1024}}
     debug
+    log 127.0.0.1 local0 debug
 
 defaults
     mode http
+    option httplog
     timeout connect {{or (key "service/haproxy/timeouts/connect") "5000ms"}}
     timeout client {{or (key "service/haproxy/timeouts/client") "50000ms"}}
     timeout server {{or (key "service/haproxy/timeouts/server") "50000ms"}}
 
 frontend incoming
     bind *:80
+    log global
 
     #Generated automatically by consul-template
     {{ range services }}
