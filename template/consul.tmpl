@@ -14,6 +14,7 @@ frontend incoming
     #Generated automatically by consul-template
     {{ range services }}
     acl host_{{ .Name }} hdr(host) -i {{ .Name }}.service.consul
+    acl host_{{ .Name }} hdr(host) -i {{ .Name }}.service.consul:80
     use_backend {{ .Name }}_backend if host_{{ .Name }}
     {{ end }}
 
