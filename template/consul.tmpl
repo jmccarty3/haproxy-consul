@@ -24,6 +24,5 @@ frontend incoming
 #Generated automatically by consul-template
 {{ range services }}
 backend {{ .Name }}_backend
-{{ range service .Name }}
-   server {{ .Name }} 127.0.0.1:{{ .Port }}{{ end }}
+   server {{ .Name }} 127.0.0.1:{{ .Port }}
 {{ end }}
